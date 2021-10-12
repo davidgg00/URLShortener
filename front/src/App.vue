@@ -1,15 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <header>
+    <h3>URL SHORTENER</h3>
+  </header>
+  <article>
+    <div id="explication">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quo
+      debitis dolores quae, quas inventore earum neque, libero quia nihil
+      eligendi nam? Facere dicta rerum ullam veniam libero consequuntur
+      incidunt?
+    </div>
+    <FormURL />
+  </article>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import FormURL from "./components/FormURL.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    FormURL,
   },
 };
 </script>
