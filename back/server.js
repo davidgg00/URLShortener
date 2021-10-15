@@ -1,4 +1,5 @@
 const { dbConnection } = require("./database/config");
+const cors = require("cors");
 const express = require("express");
 const app = express();
 require("dotenv").config();
@@ -9,6 +10,7 @@ async function connectDB() {
 }
 
 connectDB();
+app.use(cors());
 app.listen(PORT, () => console.log(`server started, listening PORT ${PORT}`));
 app.use(express.json());
 

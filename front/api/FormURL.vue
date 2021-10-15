@@ -45,7 +45,7 @@ export default {
   background: #2c3e50;
   width: 40%;
   margin: 10px auto;
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 0px 0px 0px 0px;
   display: flex;
   justify-content: center;
 }
@@ -54,6 +54,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.5em;
 }
 
 #result span {
@@ -93,7 +94,7 @@ input:focus {
 }
 
 form span,
-form button {
+button {
   white-space: nowrap;
   text-align: center;
   padding: 8px 12px;
@@ -106,7 +107,7 @@ form button {
   border-radius: 20px 0 0 20px;
   border: 0px;
 }
-form button {
+button {
   border-radius: 0px 20px 20px 0px !important;
   border: 1px solid #007eea;
   min-width: 10%;
