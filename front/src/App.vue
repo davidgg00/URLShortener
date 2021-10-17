@@ -62,5 +62,12 @@ article {
   position: absolute;
   z-index: 2;
   width: 100%;
+  left: 0;
+}
+
+@media only screen and (max-width: 350px) {
+  header {
+    margin-top: 100px;
+  }
 }
 </style>
