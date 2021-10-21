@@ -9,6 +9,7 @@
     />
     <button type="submit">Shorten</button>
   </form>
+  <img src="../assets/loading.gif" width="50" v-if="loading" />
   <transition name="fade">
     <div id="result" :style="error ? 'background:red' : ''" v-if="urlshortened">
       <span ref="urlref">{{ urlshortened }}</span>
@@ -41,10 +42,13 @@ export default {
     const notification = ref(null);
     const copied = ref(false);
     const error = ref(false);
-    const expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
-  const regex = new RegExp(expression);
+    const loading = ref(false);
+    const expression =
+      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+    const regex = new RegExp(expression);
     async function shortenURL() {
       try {
+        loading.value = true;
         error.value = false;
         notification.value = false;
         urlshortened.value = null;
@@ -61,6 +65,7 @@ export default {
         error.value = true;
         urlshortened.value = "URL INVALID";
       }
+      loading.value = false;
     }
 
     function copyShortenURLClipboard() {
@@ -78,6 +83,7 @@ export default {
       notification,
       copied,
       error,
+      loading,
     };
   },
 };
@@ -180,13 +186,13 @@ form button {
 
 @media only screen and (max-width: 800px) {
   #result {
-   width: 60%;
+    width: 60%;
   }
 }
 
 @media only screen and (max-width: 500px) {
   #result {
-   width: 90%;
+    width: 90%;
   }
 }
 
@@ -195,8 +201,8 @@ form button {
     margin-top: 100px;
   }
 
-  #result span{
-   padding: 20px 10px 20px 5px;
+  #result span {
+    padding: 20px 10px 20px 5px;
   }
 
   form button {
