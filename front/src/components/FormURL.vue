@@ -29,7 +29,11 @@ import "particles.js";
 import particleconfig from "../assets/particleconfig.json";
 export default {
   mounted() {
-    window.particlesJS("particles-js", particleconfig, () => {});
+    try {
+      window.particlesJS("particles-js", particleconfig, () => {});
+    } catch (err) {
+      console.log("couldn't load particles background");
+    }
   },
   setup() {
     const formURL = ref(null);
