@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  backend:
+    build: ./back
+    ports:
+      - "${PORT_BACKEND}:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_CNN=${MONGODB_CNN}
+    command: node server.js
+
+  frontend:
+    build: ./front
+    ports:
+      - "${PORT_FRONTEND}:8080"  
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"

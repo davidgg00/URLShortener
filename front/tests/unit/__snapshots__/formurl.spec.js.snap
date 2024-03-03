@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`FormURL component debe de hacer match con el snapshot 1`] = `
-<form><span><i class="fas fa-link"></i></span><input type="text" id="text" placeholder="Paste a long url"><button type="submit">Shorten</button></form>
-<transition-stub>
-  <!--v-if-->
-</transition-stub>
-`;

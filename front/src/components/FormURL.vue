@@ -1,95 +1,77 @@
 <template>
   <form @submit.prevent="shortenURL">
     <span><i class="fas fa-link"></i></span>
-    <input
-      type="text"
-      id="text"
-      v-model="formURL"
-      placeholder="Paste a long url"
-    />
+    <input type="text" id="text" v-model="formURL" placeholder="Paste a long url" />
     <button type="submit">Shorten</button>
   </form>
-  <img src="../assets/loading.gif" width="50" v-if="loading" />
+  <img src="../assets/loading.gif" width="50" :style="{ display: loading ? 'block' : 'none' }"  />
   <transition name="fade">
-    <div id="result" :style="error ? 'background:red' : ''" v-if="urlshortened">
-      <span ref="urlref">{{ urlshortened }}</span>
-      <i
-        class="far fa-copy"
-        :class="{ copiedStyle: copied }"
-        :style="error ? 'display:none' : ''"
-        @click="copyShortenURLClipboard"
-      ></i>
+    <div id="result" :style="{ background: error ? 'red' : '' }" v-if="urlShortened">
+      <span ref="urlRef">{{ urlShortened }}</span>
+      <i class="far fa-copy" :class="{ copiedStyle: copied }" :style="{ display: error ? 'none' : '' }"
+        @click="copyShortenedURLClipboard"></i>
     </div>
   </transition>
 </template>
 
-<script>
+<script setup lang="ts">
+import '@fortawesome/fontawesome-free/css/all.css'
 import { ref } from "vue";
-import shortenUrlApi from "../../api/shortenUrlApi";
-import "particles.js";
-import particleconfig from "../assets/particleconfig.json";
-export default {
-  mounted() {
-    try {
-      window.particlesJS("particles-js", particleconfig, () => {});
-    } catch (err) {
-      console.log("couldn't load particles background");
-    }
-  },
-  setup() {
-    const formURL = ref(null);
-    const urlshortened = ref(null);
-    const notification = ref(null);
-    const copied = ref(false);
-    const error = ref(false);
-    const loading = ref(false);
-    const expression =
-      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
-    const regex = new RegExp(expression);
-    async function shortenURL() {
-      try {
-        loading.value = true;
-        error.value = false;
-        notification.value = false;
-        urlshortened.value = null;
-        if (!formURL.value.match(regex)) {
-          console.log("entro");
-          throw "error";
-        }
-        const { data } = await shortenUrlApi.post("", {
-          longURL: formURL.value,
-        });
-        urlshortened.value =
-          process.env.VUE_APP_API_URL + "/" + data.shortenURLCode;
-      } catch (er) {
-        error.value = true;
-        urlshortened.value = "URL INVALID";
-      }
-      loading.value = false;
-    }
+import shortenUrlApi from "../api/shortenUrlApi";
 
-    function copyShortenURLClipboard() {
-      navigator.clipboard.writeText(urlshortened.value);
-      copied.value = true;
-      setTimeout(function () {
-        copied.value = false;
-      }, 2000);
+const formURL = ref<string>("");
+const urlShortened = ref<string | null>(null);
+const notification = ref(null); // What is this used for?
+const copied = ref(false);
+const error = ref(false);
+const loading = ref(false);
+
+const expression =
+  /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+const regex = new RegExp(expression);
+
+interface ShortenUrlResponse {
+  shortenURLCode: string; // Assuming this is the property containing the shortened URL
+}
+
+async function shortenURL() {
+  try {
+    loading.value = true;
+    error.value = false;
+    urlShortened.value = null;
+    if (!formURL.value.match(regex)) {
+      throw "error";
     }
-    return {
-      shortenURL,
-      formURL,
-      urlshortened,
-      copyShortenURLClipboard,
-      notification,
-      copied,
-      error,
-      loading,
-    };
-  },
-};
+    const { data } = await shortenUrlApi.post<ShortenUrlResponse>("", {
+      longURL: formURL.value,
+    });
+    console.log(import.meta.env.VITE_BASE_URL);
+    urlShortened.value = import.meta.env.VITE_BASE_URL + "/" + data.shortenURLCode;
+  } catch (err) {
+    console.log(err);
+    error.value = true;
+    loading.value = false;
+    urlShortened.value = "URL INVALID";
+  } finally {
+    loading.value = false;
+  }
+}
+
+function copyShortenedURLClipboard() {
+  console.log('lanzo!');
+  navigator.clipboard.writeText(urlShortened.value || "");
+  copied.value = true;
+  setTimeout(() => {
+    copied.value = false;
+  }, 2000);
+}
 </script>
 
+
 <style scoped>
+img {
+  margin: 0 auto;
+}
 i {
   cursor: pointer;
   transition: all 0.5s ease-in;
@@ -99,6 +81,7 @@ i {
   transition: all 0.1s ease-in;
   color: green;
 }
+
 #result {
   background: #2c3e50;
   width: 40%;
@@ -121,10 +104,10 @@ i {
 }
 
 form {
-  position: relative;
   display: flex;
   justify-content: center;
 }
+
 input {
   display: block;
   min-width: 30%;
@@ -164,6 +147,7 @@ form button {
   border-radius: 20px 0 0 20px;
   border: 0px;
 }
+
 form button {
   border-radius: 0px 20px 20px 0px !important;
   border: 1px solid #007eea;
