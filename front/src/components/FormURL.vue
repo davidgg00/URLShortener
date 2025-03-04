@@ -4,7 +4,7 @@
     <input type="text" id="text" v-model="formURL" placeholder="Paste a long url" />
     <button type="submit">Shorten</button>
   </form>
-  <img src="../assets/loading.gif" width="50" :style="{ display: loading ? 'block' : 'none' }"  />
+  <img src="../assets/loading.gif" width="50" :style="{ display: loading ? 'block' : 'none' }" />
   <transition name="fade">
     <div id="result" :style="{ background: error ? 'red' : '' }" v-if="urlShortened">
       <span ref="urlRef">{{ urlShortened }}</span>
@@ -21,7 +21,6 @@ import shortenUrlApi from "../api/shortenUrlApi";
 
 const formURL = ref<string>("");
 const urlShortened = ref<string | null>(null);
-const notification = ref(null); // What is this used for?
 const copied = ref(false);
 const error = ref(false);
 const loading = ref(false);
@@ -72,6 +71,7 @@ function copyShortenedURLClipboard() {
 img {
   margin: 0 auto;
 }
+
 i {
   cursor: pointer;
   transition: all 0.5s ease-in;
